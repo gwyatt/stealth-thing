@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 260" width="210" height="260">
+<defs>
+  <linearGradient id="body" x1="0" y1="0" x2="1" y2="0.35">
+    <stop offset="0" stop-color="#8b8580"/><stop offset="0.38" stop-color="#3c3836"/><stop offset="1" stop-color="#0f0e0d"/>
+  </linearGradient>
+  <linearGradient id="bodyDark" x1="0" y1="0" x2="1" y2="0.4">
+    <stop offset="0" stop-color="#3c3836"/><stop offset="0.6" stop-color="#0f0e0d"/><stop offset="1" stop-color="#050404"/>
+  </linearGradient>
+  <linearGradient id="bodyV" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#8b8580"/><stop offset="0.5" stop-color="#3c3836"/><stop offset="1" stop-color="#0f0e0d"/>
+  </linearGradient>
+  <linearGradient id="cloth" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#3c3836"/><stop offset="0.7" stop-color="#0f0e0d"/><stop offset="1" stop-color="#000" stop-opacity="0.9"/>
+  </linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#b5ab9b"/><stop offset="0.25" stop-color="#5d564d"/><stop offset="0.7" stop-color="#1e1b18"/><stop offset="1" stop-color="#0a0908"/>
+  </linearGradient>
+  <linearGradient id="bone" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#e2d6bb"/><stop offset="0.5" stop-color="#8d8270"/><stop offset="1" stop-color="#2b261f"/>
+  </linearGradient>
+  <radialGradient id="glow"><stop offset="0" stop-color="#d9d0c4" stop-opacity="0.9"/><stop offset="1" stop-color="#d9d0c4" stop-opacity="0"/></radialGradient>
+  <radialGradient id="eyeGlow"><stop offset="0" stop-color="#ff6a2a"/><stop offset="0.35" stop-color="#ff6a2a" stop-opacity="0.6"/><stop offset="1" stop-color="#ff6a2a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="fire" cx="0.5" cy="0.7" r="0.6"><stop offset="0" stop-color="#fff4c2"/><stop offset="0.3" stop-color="#ffb347"/><stop offset="0.7" stop-color="#d4421a"/><stop offset="1" stop-color="#5a0f05" stop-opacity="0"/></radialGradient>
+  <radialGradient id="shadow"><stop offset="0" stop-color="#000" stop-opacity="0.75"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <filter id="grain" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 -0.25" result="na"/>
+    <feComposite in="na" in2="SourceGraphic" operator="in" result="g"/>
+    <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="g"/></feMerge>
+  </filter>
+  <filter id="b1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.2"/></filter>
+  <filter id="b3" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="b8" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<ellipse cx="105" cy="250" rx="75.6" ry="10" fill="url(#shadow)"/>
+<g filter="url(#grain)">
+
+  <path d="M104 40 C74 40 64 70 62 100 C58 150 50 200 30 250 C60 236 70 252 90 236 C100 252 120 236 132 250 C140 230 160 244 176 232 C150 190 146 140 144 100 C142 66 132 40 104 40 Z" fill="url(#cloth)"/>
+  <path d="M30 250 C40 220 60 210 50 190 M176 232 C170 210 180 196 172 176" stroke="#8b8580" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <g fill="#bdb5ab" opacity="0.5"><circle cx="40" cy="236" r="2"/><circle cx="24" cy="214" r="1.4"/><circle cx="186" cy="220" r="1.6"/><circle cx="60" cy="256" r="1.2"/><circle cx="160" cy="256" r="1.5"/><circle cx="14" cy="190" r="1"/></g>
+  <path d="M70 110 C50 120 34 130 24 136 L28 146 C44 140 60 134 78 128 Z" fill="url(#cloth)"/>
+  <path d="M24 136 L10 132 M26 140 L10 142 M28 144 L14 152 M24 136 L16 124" stroke="url(#bone)" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M84 70 C84 56 124 56 124 70 L122 104 C112 112 96 112 86 104 Z" fill="#030303"/>
+  <circle cx="96" cy="84" r="7.040000000000001" fill="url(#eyeGlow)" opacity="0.55" filter="url(#b3)"/><circle cx="96" cy="84" r="2.2" fill="url(#eyeGlow)"/><circle cx="96" cy="84" r="0.9900000000000001" fill="#fff"/><circle cx="112" cy="84" r="7.040000000000001" fill="url(#eyeGlow)" opacity="0.55" filter="url(#b3)"/><circle cx="112" cy="84" r="2.2" fill="url(#eyeGlow)"/><circle cx="112" cy="84" r="0.9900000000000001" fill="#fff"/>
+</g>
+</svg>

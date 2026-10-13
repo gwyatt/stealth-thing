@@ -1,0 +1,12 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Art contact sheet</title>
+<style>
+  body { background: radial-gradient(#2a2420, #0b0a09); color: #ccc; font: 13px serif; display: flex; flex-wrap: wrap; gap: 12px; padding: 12px; }
+  figure { margin: 0; text-align: center; background: #00000040; padding: 6px; border: 1px solid #333; }
+  img { height: 210px; display: block; }
+</style>
+<script type="module">
+  const ids = new URLSearchParams(location.search).get('ids').split(',');
+  for (const id of ids) document.body.insertAdjacentHTML('beforeend', `<figure><img src="../../assets/art/creatures/${id}.svg"><figcaption>${id}</figcaption></figure>`);
+</script>

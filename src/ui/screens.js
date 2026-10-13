@@ -4,29 +4,32 @@ import { RELICS } from '../data/relics.js';
 import { POTIONS } from '../data/potions.js';
 import { ACT_NAMES, ENEMIES } from '../data/enemies.js';
 import { MAP_ROWS, MAP_COLS } from '../engine/map.js';
-import { esc, renderCard, renderRelic, relicTip, potionTip } from './components.js';
+import { esc, renderCard, renderRelic, relicTip, potionTip, relicIcon, potionIcon, priceTag, creatureImg } from './components.js';
+import { emblem, NODE_EMBLEM } from './art/emblems.js';
 
-const NODE_ICONS = { combat: '⚔️', elite: '👹', rest: '🔥', shop: '💰', event: '❓', treasure: '🎁', boss: '💀' };
 const NODE_NAMES = { combat: 'Monster', elite: 'Elite', rest: 'Campfire', shop: 'Merchant', event: 'Unknown', treasure: 'Treasure', boss: 'Boss' };
+const EVENT_EMBLEM = {
+  forgotten_shrine: 'idol', wandering_smith: 'mace', pool_of_embers: 'flame', hooded_merchant: 'pouch', cracked_chest: 'chest',
+  whispering_skull: 'skull', lost_pilgrim: 'lantern', mirror_pool: 'eye', fungal_feast: 'leaf', molten_altar: 'pyre', gambling_imp: 'coin',
+};
 
 export function titleScreen({ hasSave, profile, seed }) {
   return `<div class="title-screen">
     <div class="embers" aria-hidden="true">${Array.from({ length: 28 }, (_, i) => `<i style="left:${(i * 37) % 100}%;animation-delay:${(i * 0.53) % 7}s;--dx:${((i * 29) % 80) - 40}px"></i>`).join('')}</div>
     <div class="title-block">
-      <div class="title-lantern">🏮</div>
-      <h1 class="logo">EMBERDEEP</h1>
-      <p class="tagline">Carry the last flame into the dark.</p>
-      <div class="title-buttons">
-        ${hasSave ? '<button class="btn primary" data-action="continue">Continue Run</button>' : ''}
-        <button class="btn ${hasSave ? '' : 'primary'}" data-action="new-run">New Run</button>
-        <button class="btn" data-action="open-help">How to Play</button>
-        <button class="btn" data-action="open-library">Card Library</button>
-      </div>
+      <h1 class="logo">Emberdeep</h1>
+      <p class="tagline">The last flame descends into the dark</p>
+      <nav class="title-menu">
+        ${hasSave ? '<button class="menu-item" data-action="continue">Continue</button>' : ''}
+        <button class="menu-item" data-action="new-run">New Journey</button>
+        <button class="menu-item" data-action="open-help">How to Play</button>
+        <button class="menu-item" data-action="open-library">Codex</button>
+      </nav>
       <details class="seed-box">
         <summary>Custom seed</summary>
         <input id="seed-input" maxlength="16" placeholder="Random" value="${esc(seed || '')}" />
       </details>
-      <div class="profile">Runs: ${profile.runs} · Victories: ${profile.wins} · Best floor: ${profile.bestFloor} · Best score: ${profile.bestScore}</div>
+      <div class="profile">Journeys ${profile.runs} &middot; Victories ${profile.wins} &middot; Deepest floor ${profile.bestFloor} &middot; Best score ${profile.bestScore}</div>
     </div>
   </div>`;
 }
@@ -38,14 +41,14 @@ export function topBar(game, { inCombat = false, combat = null } = {}) {
   const potions = r.potions
     .map((p, i) =>
       p
-        ? `<button class="potion-slot filled" data-action="potion" data-slot="${i}" data-tip="${esc(potionTip(p))}">${POTIONS[p].icon}</button>`
-        : `<span class="potion-slot empty" data-tip="Empty potion slot">·</span>`,
+        ? `<button class="potion-slot filled" data-action="potion" data-slot="${i}" data-tip="${esc(potionTip(p))}">${potionIcon(p)}</button>`
+        : `<span class="potion-slot empty" data-tip="Empty potion slot">${emblem('flask', 'potion-emblem empty')}</span>`,
     )
     .join('');
   return `<header class="topbar">
     <div class="tb-group">
-      <span class="tb-hp" data-tip="Hit Points">❤️ ${Math.max(0, hp)}/${maxHp}</span>
-      <span class="tb-gold" data-tip="Gold">🪙 ${r.gold}</span>
+      <span class="tb-hp" data-tip="Hit Points">${emblem('heart')} ${Math.max(0, hp)}/${maxHp}</span>
+      <span class="tb-gold" data-tip="Gold">${emblem('coin')} ${r.gold}</span>
       <span class="tb-potions">${potions}</span>
     </div>
     <div class="tb-group tb-mid">
@@ -53,9 +56,9 @@ export function topBar(game, { inCombat = false, combat = null } = {}) {
       <span class="tb-floor">Floor ${r.floor}</span>
     </div>
     <div class="tb-group">
-      <button class="tb-btn" data-action="open-deck" data-tip="View your deck (D)">🂠 ${r.deck.length}</button>
-      ${inCombat ? '' : '<button class="tb-btn" data-action="open-map-peek" data-tip="View map (M)">🗺️</button>'}
-      <button class="tb-btn" data-action="open-settings" data-tip="Settings">⚙️</button>
+      <button class="tb-btn" data-action="open-deck" data-tip="View your deck (D)">${emblem('cards')} ${r.deck.length}</button>
+      ${inCombat ? '' : `<button class="tb-btn" data-action="open-map-peek" data-tip="View map (M)">${emblem('map')}</button>`}
+      <button class="tb-btn" data-action="open-settings" data-tip="Settings">${emblem('gear')}</button>
     </div>
   </header>
   <div class="relic-bar">${r.relics.map((id) => renderRelic(id)).join('')}</div>`;
@@ -101,16 +104,16 @@ export function mapView(game, { peek = false } = {}) {
     if (isAvail(n)) cls.push('available');
     if (visited.has(key)) cls.push('visited');
     if (pos && pos.row === n.row && pos.col === n.col) cls.push('current');
-    const icon = n.type === 'boss' ? bossIcon(game) : NODE_ICONS[n.type];
+    const icon = emblem(NODE_EMBLEM[n.type]);
     const label = NODE_NAMES[n.type];
     const attrs = isAvail(n) ? `data-action="enter-node" data-row="${n.row}" data-col="${n.col}"` : '';
     return `<button class="${cls.join(' ')}" style="left:${p.x}%;top:${p.y}px" ${attrs} data-tip="${label}" ${isAvail(n) ? '' : 'tabindex="-1"'}>${icon}</button>`;
   };
 
   const nodes = map.rows.flat().map(nodeHtml).join('') + nodeHtml(map.boss);
-  const legend = Object.entries(NODE_ICONS)
+  const legend = Object.entries(NODE_EMBLEM)
     .filter(([k]) => k !== 'boss')
-    .map(([k, i]) => `<span>${i} ${NODE_NAMES[k]}</span>`)
+    .map(([k, i]) => `<span>${emblem(i)} ${NODE_NAMES[k]}</span>`)
     .join('');
 
   return `<div class="map-screen ${peek ? 'peek' : ''}">
@@ -121,34 +124,34 @@ export function mapView(game, { peek = false } = {}) {
         ${nodes}
       </div>
     </div>
-    ${peek ? '' : `<div class="map-hint">${available.length ? 'Choose your path.' : ''}</div>`}
+    ${peek ? '' : `<div class="map-hint">${available.length ? `Choose your path. ${esc(bossName(game))} awaits at its end.` : ''}</div>`}
   </div>`;
 }
 
-function bossIcon(game) {
+export function bossName(game) {
   const ids = { 1: 'drowned_king', 2: 'rot_colossus', 3: 'ember_tyrant' };
-  return ENEMIES[ids[game.run.act]].icon;
+  return ENEMIES[ids[game.run.act]].name;
 }
 
 export function rewardScreen(game) {
   const room = game.run.room;
-  const title = room.kind === 'boss' ? 'Boss Defeated!' : room.kind === 'elite' ? 'Elite Defeated!' : 'Victory!';
+  const title = room.kind === 'boss' ? 'Spoils of a Great Foe' : room.kind === 'elite' ? 'Spoils of the Hunt' : 'Spoils';
   const items = room.rewards
     .map((r, i) => {
       if (r.claimed) return '';
       switch (r.type) {
         case 'gold':
-          return `<button class="reward-item" data-action="claim" data-index="${i}">🪙 <span>${r.amount} Gold</span></button>`;
+          return `<button class="reward-item" data-action="claim" data-index="${i}">${emblem('coin', 'ri-gold')} <span>${r.amount} Gold</span></button>`;
         case 'potion': {
           const full = !game.run.potions.includes(null);
-          return `<button class="reward-item ${full ? 'disabled' : ''}" data-action="claim" data-index="${i}" data-tip="${esc(potionTip(r.id))}">${POTIONS[r.id].icon} <span>${POTIONS[r.id].name}${full ? ' (slots full)' : ''}</span></button>`;
+          return `<button class="reward-item ${full ? 'disabled' : ''}" data-action="claim" data-index="${i}" data-tip="${esc(potionTip(r.id))}">${potionIcon(r.id)} <span>${POTIONS[r.id].name}${full ? ' (slots full)' : ''}</span></button>`;
         }
         case 'relic':
-          return `<button class="reward-item" data-action="claim" data-index="${i}" data-tip="${esc(relicTip(r.id))}">${RELICS[r.id].icon} <span>${RELICS[r.id].name}</span></button>`;
+          return `<button class="reward-item" data-action="claim" data-index="${i}" data-tip="${esc(relicTip(r.id))}">${relicIcon(r.id)} <span>${RELICS[r.id].name}</span></button>`;
         case 'bossRelic':
-          return `<button class="reward-item special" data-action="open-boss-relic" data-index="${i}">👑 <span>Choose a Boss Relic</span></button>`;
+          return `<button class="reward-item special" data-action="open-boss-relic" data-index="${i}">${emblem('crown', 'ri-gold')} <span>Choose a Boss Relic</span></button>`;
         case 'cards':
-          return `<button class="reward-item" data-action="open-card-reward" data-index="${i}">🂠 <span>Add a card to your deck</span></button>`;
+          return `<button class="reward-item" data-action="open-card-reward" data-index="${i}">${emblem('cards', 'ri-card')} <span>Add a card to your deck</span></button>`;
         default:
           return '';
       }
@@ -159,7 +162,7 @@ export function rewardScreen(game) {
     <div class="panel">
       <h2>${title}</h2>
       <div class="reward-list">${items || '<p class="muted">Nothing left to collect.</p>'}</div>
-      <button class="btn primary" data-action="leave-rewards">${leaveLabel} ▶</button>
+      <button class="btn primary" data-action="leave-rewards">${leaveLabel}</button>
     </div>
   </div>`;
 }
@@ -182,7 +185,7 @@ export function bossRelicOverlay(game, index) {
     <div class="boss-relics">${r.ids
       .map(
         (id) => `<button class="boss-relic" data-action="take-boss-relic" data-id="${id}">
-          <div class="relic big">${RELICS[id].icon}</div>
+          <div class="relic big">${relicIcon(id)}</div>
           <div class="br-name">${esc(RELICS[id].name)}</div>
           <div class="br-desc">${esc(RELICS[id].desc)}</div>
         </button>`,
@@ -207,7 +210,7 @@ export function shopScreen(game) {
       r.sold
         ? '<div class="shop-relic sold">Sold</div>'
         : `<button class="shop-relic" data-action="buy-relic" data-index="${i}" data-tip="${esc(relicTip(r.id))}">
-            <span class="relic big">${RELICS[r.id].icon}</span><span class="price ${gold < game.price(r.price) ? 'too-much' : ''}">🪙 ${game.price(r.price)}</span></button>`,
+            <span class="relic big">${relicIcon(r.id)}</span>${priceTag(game.price(r.price), gold < game.price(r.price))}</button>`,
     )
     .join('');
   const potions = stock.potions
@@ -215,23 +218,23 @@ export function shopScreen(game) {
       p.sold
         ? '<div class="shop-relic sold">Sold</div>'
         : `<button class="shop-relic" data-action="buy-potion" data-index="${i}" data-tip="${esc(potionTip(p.id))}">
-            <span class="relic big">${POTIONS[p.id].icon}</span><span class="price ${gold < game.price(p.price) ? 'too-much' : ''}">🪙 ${game.price(p.price)}</span></button>`,
+            <span class="relic big">${potionIcon(p.id)}</span>${priceTag(game.price(p.price), gold < game.price(p.price))}</button>`,
     )
     .join('');
   const rp = game.removePrice();
   const removal = stock.removeUsed
     ? '<div class="shop-relic sold">Used</div>'
     : `<button class="shop-relic removal" data-action="shop-remove" data-tip="Remove a card from your deck.">
-        <span class="relic big">🗑️</span><span class="price ${gold < rp ? 'too-much' : ''}">🪙 ${rp}</span></button>`;
+        <span class="relic big">${emblem('flame', 'relic-emblem', 'color:#c8602a')}</span>${priceTag(rp, gold < rp)}</button>`;
   return `<div class="shop-screen">
-    <div class="merchant"><span class="merchant-icon">🧙</span><p>"Light's scarce down here, friend. Everything else has a price."</p></div>
+    <div class="merchant"><div class="merchant-portrait">${creatureImg('merchant', 0.62)}</div><p>"Heh heh... Light's scarce down here, friend. Everything else has a price."</p></div>
     <section><h3>Cards</h3><div class="card-row shop-cards">${cards}</div></section>
     <div class="shop-lower">
       <section><h3>Relics</h3><div class="shop-row">${relics}</div></section>
       <section><h3>Potions</h3><div class="shop-row">${potions}</div></section>
       <section><h3>Card Removal</h3><div class="shop-row">${removal}</div></section>
     </div>
-    <button class="btn primary leave" data-action="leave-room">Leave Shop ▶</button>
+    <button class="btn primary leave" data-action="leave-room">Leave Shop</button>
   </div>`;
 }
 
@@ -240,20 +243,19 @@ export function restScreen(game) {
   if (room.done) {
     const msg = room.result === 'rested' ? 'You rest by the fire. Your wounds close.' : 'You temper a card in the flames.';
     return `<div class="panel-screen"><div class="panel campfire">
-      <div class="fire-big">🔥</div><p>${msg}</p>
-      <button class="btn primary" data-action="leave-room">Continue ▶</button></div></div>`;
+      <p class="event-text">${msg}</p>
+      <button class="btn primary" data-action="leave-room">Continue</button></div></div>`;
   }
   const canRest = game.canRest();
   const canSmith = game.hasUpgradable();
   return `<div class="panel-screen"><div class="panel campfire">
-    <div class="fire-big">🔥</div>
     <h2>Campfire</h2>
-    <p class="muted">The flames crackle. You may rest or improve your cards.</p>
+    <p class="muted">Ash and old bones ring the fire. For a moment, the dark keeps its distance.</p>
     <div class="choice-row">
       <button class="choice ${canRest ? '' : 'disabled'}" data-action="rest" ${canRest ? '' : 'disabled'}>
-        <span class="choice-icon">🛌</span><b>Rest</b><span>${canRest ? `Heal ${game.restHealAmount()} HP.` : 'The Hungry Lantern forbids it.'}</span></button>
+        <span class="choice-icon">${emblem('heart')}</span><b>Rest</b><span>${canRest ? `Heal ${game.restHealAmount()} HP.` : 'The Hungry Lantern forbids it.'}</span></button>
       <button class="choice ${canSmith ? '' : 'disabled'}" data-action="smith" ${canSmith ? '' : 'disabled'}>
-        <span class="choice-icon">⚒️</span><b>Smith</b><span>Upgrade a card.</span></button>
+        <span class="choice-icon">${emblem('mace')}</span><b>Smith</b><span>Upgrade a card.</span></button>
     </div>
   </div></div>`;
 }
@@ -263,16 +265,16 @@ export function treasureScreen(game) {
   if (!room.opened) {
     return `<div class="panel-screen"><div class="panel">
       <h2>Treasure</h2>
-      <button class="chest" data-action="open-chest">🧰</button>
+      <button class="chest" data-action="open-chest">${emblem('chest')}</button>
       <p class="muted">Click the chest to open it.</p></div></div>`;
   }
   const relic = room.relic ? `<div class="treasure-relic">${renderRelic(room.relic, { big: true })}<div><b>${esc(RELICS[room.relic].name)}</b><br><span class="muted">${esc(RELICS[room.relic].desc)}</span></div></div>` : '';
   return `<div class="panel-screen"><div class="panel">
     <h2>Treasure</h2>
-    <div class="chest open">🎁</div>
+    <div class="chest open">${emblem('chest')}</div>
     ${relic}
-    <p>🪙 ${room.gold} Gold</p>
-    <button class="btn primary" data-action="leave-room">Continue ▶</button></div></div>`;
+    <p>${priceTag(room.gold)} Gold</p>
+    <button class="btn primary" data-action="leave-room">Continue</button></div></div>`;
 }
 
 export function eventScreen(game) {
@@ -291,10 +293,10 @@ export function eventScreen(game) {
   } else {
     const transformed = room.result.select && room.result.select.resultCard ? `<p>It became <b>${esc(CARDS[room.result.select.resultCard].name)}</b>.</p>` : '';
     body = `<p class="event-result">${esc(room.result.text)}</p>${transformed}
-      <button class="btn primary" data-action="leave-room">Continue ▶</button>`;
+      <button class="btn primary" data-action="leave-room">Continue</button>`;
   }
   return `<div class="panel-screen"><div class="panel event">
-    <div class="event-icon">${def.icon}</div>
+    <div class="event-icon">${emblem(EVENT_EMBLEM[def.id] || 'rune')}</div>
     <h2>${esc(def.name)}</h2>
     <p class="event-text">${esc(def.text)}</p>
     ${body}
@@ -304,7 +306,7 @@ export function eventScreen(game) {
 export function blessingScreen(game) {
   const room = game.run.room;
   return `<div class="panel-screen"><div class="panel event">
-    <div class="event-icon">🕯️</div>
+    <div class="event-icon">${emblem('candle')}</div>
     <h2>The Ember Spirit</h2>
     <p class="event-text">At the mouth of the Deep, a warm voice rises from your lantern.
       "Keeper. The dark below has swallowed every flame but yours. Take a gift before you descend."</p>
@@ -325,7 +327,7 @@ export function actIntroScreen(game) {
     <h1>${ACT_NAMES[n]}</h1>
     <p class="event-text">${flavor}</p>
     <p class="muted">You recover some of your strength.</p>
-    <button class="btn primary" data-action="leave-room">Descend ▶</button>
+    <button class="btn primary" data-action="leave-room">Descend</button>
   </div></div>`;
 }
 
@@ -334,8 +336,8 @@ export function gameOverScreen(game) {
   const s = r.stats;
   const won = r.won;
   return `<div class="panel-screen"><div class="panel gameover ${won ? 'won' : 'lost'}">
-    <div class="event-icon">${won ? '👑' : '🪦'}</div>
-    <h1>${won ? 'Victory!' : 'Your Flame Goes Out'}</h1>
+    <div class="event-icon">${emblem(won ? 'crown' : 'skull')}</div>
+    <h1>${won ? 'The Flame Endures' : 'Extinguished'}</h1>
     <p class="event-text">${won ? 'The Ember Tyrant falls, and its stolen fire returns to the world above. Your lantern burns brighter than ever.' : `You fell on floor ${r.floor} of ${ACT_NAMES[r.act]}.`}</p>
     <table class="stats">
       <tr><td>Score</td><td><b>${game.score()}</b></td></tr>
@@ -394,12 +396,12 @@ export function helpOverlay() {
     <h2>How to Play</h2>
     <p>You are the <b>Lanternkeeper</b>, descending through three acts of the Deep. Each act ends with a boss. Defeat the Ember Tyrant at the bottom to win.</p>
     <h3>The Map</h3>
-    <p>Choose a path upward. ⚔️ Monsters give gold and cards. 👹 Elites are tough but drop relics. 🔥 Campfires let you heal or upgrade. 💰 Merchants sell cards, relics, potions and card removal. ❓ Unknown rooms hold events. 🎁 Treasure holds a relic.</p>
+    <p>Choose your path down through each act. <b>Monsters</b> give gold and cards. <b>Elites</b> are deadly but carry relics. <b>Campfires</b> let you heal or upgrade a card. <b>Merchants</b> sell cards, relics, potions and card removal. <b>Unknown</b> rooms hold strange encounters. <b>Treasure</b> holds a relic.</p>
     <h3>Combat</h3>
     <p>Each turn you get <b>3 Energy</b> and draw <b>5 cards</b>. Click a card to play it; attacks that need a target are then aimed by clicking an enemy. Enemies show their <b>intent</b> above their heads, so you know what's coming. <b>Block</b> absorbs damage and expires at the start of your next turn.</p>
-    <h3>Light 🏮</h3>
+    <h3>Light</h3>
     <p>Your unique resource. Many cards and relics generate <b>Light</b>; others grow stronger with it or spend it for big effects. Light persists between turns (max 10), but <b>1 Light wanes</b> at the end of each turn.</p>
-    <h3>Burn 🔥</h3>
+    <h3>Burn</h3>
     <p>Burn makes an enemy lose HP at the start of its turn, then decreases by 1. It ignores Block.</p>
     <h3>Controls</h3>
     <p><kbd>1</kbd>–<kbd>9</kbd> select a card (then a number picks a target) · <kbd>E</kbd> end turn · <kbd>Esc</kbd> cancel · <kbd>D</kbd> deck · <kbd>M</kbd> map.</p>
@@ -412,7 +414,7 @@ export function settingsOverlay({ muted, inRun }) {
   return `<div class="overlay-inner small">
     <h2>Settings</h2>
     <div class="settings-list">
-      <button class="btn" data-action="toggle-sound">${muted ? '🔇 Sound: Off' : '🔊 Sound: On'}</button>
+      <button class="btn" data-action="toggle-sound">${muted ? 'Sound: Off' : 'Sound: On'}</button>
       <button class="btn" data-action="open-help">How to Play</button>
       ${inRun ? '<button class="btn" data-action="to-title">Save &amp; Quit to Menu</button><button class="btn danger" data-action="abandon">Abandon Run</button>' : ''}
     </div>
@@ -425,7 +427,7 @@ export function potionOverlay(game, slot, { inCombat, canUseNow }) {
   const p = POTIONS[id];
   const usable = inCombat ? canUseNow : !!p.useOutside;
   return `<div class="overlay-inner small">
-    <div class="event-icon">${p.icon}</div>
+    <div class="event-icon">${potionIcon(id)}</div>
     <h2>${esc(p.name)}</h2>
     <p>${esc(p.desc)}</p>
     <div class="overlay-actions">

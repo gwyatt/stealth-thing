@@ -1,0 +1,7 @@
+<!doctype html><meta charset="utf-8"><title>Emblems</title>
+<style>body{background:#151110;color:#bbb;font:12px serif;display:flex;flex-wrap:wrap;gap:10px;padding:10px}
+figure{margin:0;width:90px;text-align:center}svg{width:64px;height:64px;color:#c8b088;fill:currentColor}.cut{fill:#151110;stroke:#151110}.liquid{fill:#c83a3a}</style>
+<script type="module">
+import { EMBLEMS, emblem } from '../../src/ui/art/emblems.js';
+for (const k of Object.keys(EMBLEMS)) document.body.insertAdjacentHTML('beforeend', `<figure>${emblem(k)}<figcaption>${k}</figcaption></figure>`);
+</script>

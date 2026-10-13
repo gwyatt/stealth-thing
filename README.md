@@ -23,6 +23,16 @@ Any static file server works (`python3 -m http.server`, GitHub Pages, …). The 
 - **11 events**, plus a starting blessing.
 - Seeded runs (enter a custom seed on the title screen), autosave between rooms, and a lifetime record.
 
+### Art direction
+
+Dark, grim and quiet, in the tradition of Souls games: silhouettes lit from one side by the Lanternkeeper's lantern, glowing eyes, fog, ash and embers, iron-and-bronze UI and a film-grain/vignette pass over everything. All art is hand-authored vector code (no image files to license):
+
+- **29 characters** — the Lanternkeeper, the merchant and every enemy and boss (`assets/art/creatures/`).
+- **6 scenes** — the flooded crypt, the fungal warrens, the burning cathedral, the title vista, the campfire and the map vellum (`assets/art/scenes/`).
+- **~50 engraved emblems** for card art, relics, potions, statuses, intents, map nodes and HUD icons (`src/ui/art/emblems.js`).
+
+The SVGs are generated from `tools/art/*.js`. After editing them, run `npm run art`. To review every character at once, start the server and open `/tools/art/sheet.html?ids=player,ghoul,...`; `/tools/art/emblems.html` shows all emblems.
+
 ### Signature mechanic: Light 🏮
 
 Light is a second resource that **persists between turns** (max 10) and **wanes by 1** at the end of each turn. Cards build it (*Kindle*, *Stoke*, *Brace*), scale off it (*Inferno Fist*, *Lantern Ward*, *Twin Suns*) or spend it all at once (*Flare*, *Supernova*). Relics and powers bend the rules: *Everburning Wick* stops it waning, *Mirror Shard* raises the cap, *Ashen Armor* turns Light into Block.
@@ -49,6 +59,9 @@ src/engine/combat.js        turn-based combat rules (pure, deterministic)
 src/engine/map.js           act map generation
 src/engine/game.js          run state, rewards, shop, rest, events, save/load
 src/ui/                     DOM rendering, input, animation, procedural sound
+src/ui/art/                 emblem library and generated creature size manifest
+assets/art/                 generated creature and scene SVGs
+tools/art/                  art source (character and scene generators)
 tools/bot.js                greedy bot that plays full runs headlessly
 tools/simulate.js           balance simulator
 tests/                      node:test suite

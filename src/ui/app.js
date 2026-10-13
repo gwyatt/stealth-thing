@@ -104,7 +104,8 @@ export class App {
           default: body = S.mapView(g);
         }
       }
-      html = `<div class="run act-${g.run.act}">${S.topBar(g, { inCombat, combat: g.combat })}<main class="stage">${body}</main></div>`;
+      const scene = inCombat ? 'combat' : !room ? 'map' : room.type;
+      html = `<div class="run act-${g.run.act} scene-${scene}">${S.topBar(g, { inCombat, combat: g.combat })}<main class="stage">${body}</main></div>`;
     }
     const pending = g && !g.combat ? g.pendingSelect() : null;
     const overlay = this.overlayHtml(pending);
@@ -142,7 +143,7 @@ export class App {
       }
       case 'cardReward': return S.cardRewardOverlay(g, o.index);
       case 'bossRelic': return S.bossRelicOverlay(g, o.index);
-      case 'shopRemove': return S.deckOverlay(g.run.deck, `Remove a Card (🪙 ${g.removePrice()})`, { action: 'select-card', cancel: 'Cancel' });
+      case 'shopRemove': return S.deckOverlay(g.run.deck, `Remove a Card (${g.removePrice()} Gold)`, { action: 'select-card', cancel: 'Cancel' });
       case 'smith': return S.deckOverlay(g.selectableCards('upgrade'), 'Upgrade a Card', { action: 'select-card', upgradePreview: true, cancel: 'Cancel' });
       case 'help': return S.helpOverlay();
       case 'library': return S.libraryOverlay();
@@ -427,7 +428,7 @@ export class App {
     this.ui = { targeting: null, busy: false, acting: null, dying: new Set(), seenHand: new Set() };
     const c = this.game.startCombat();
     c.drainEvents();
-    if (c.isBoss) this.toast(`${c.enemies[0].name} awaits.`);
+    if (c.isBoss) this.banner(c.enemies[0].name, 'boss-intro');
   }
 
   clickCard(uid) {
@@ -517,12 +518,12 @@ export class App {
           once('hit', ev.amount >= 15 ? sfx.bigHit : ev.attack ? sfx.hit : sfx.burn);
           delay += 70;
           break;
-        case 'block': if (el) this.floater(el, `+${ev.amount}🛡️`, 'block', delay); once('block', sfx.block); delay += 50; break;
+        case 'block': if (el) this.floater(el, `+${ev.amount} Block`, 'block', delay); once('block', sfx.block); delay += 50; break;
         case 'heal': if (el) this.floater(el, `+${ev.amount}`, 'heal', delay); once('heal', sfx.heal); break;
         case 'light':
           if (ev.amount > 0) {
             const p = this.root.querySelector('[data-cid="player"]');
-            if (p) this.floater(p, `+${ev.amount}🏮`, 'light', delay);
+            if (p) this.floater(p, `+${ev.amount} Light`, 'light', delay);
             once('light', sfx.light);
           }
           break;
@@ -541,6 +542,14 @@ export class App {
         default: break;
       }
     }
+  }
+
+  banner(text, cls) {
+    const b = document.createElement('div');
+    b.className = `banner ${cls}`;
+    b.innerHTML = `<span>${text}</span>`;
+    document.body.appendChild(b);
+    setTimeout(() => b.remove(), cls === 'death' ? 3600 : 2200);
   }
 
   floater(el, text, cls, delay) {
@@ -593,9 +602,14 @@ export class App {
   async endCombat() {
     const c = this.game.combat;
     this.ui.busy = true;
-    if (c.won) sfx.victory();
-    else if (!c.escaped) sfx.defeat();
-    await wait(c.escaped ? 300 : 1100);
+    if (c.won) {
+      sfx.victory();
+      this.banner(c.isBoss ? 'Great Foe Felled' : c.isElite ? 'Foe Vanquished' : 'Victory', 'victory');
+    } else if (!c.escaped) {
+      sfx.defeat();
+      this.banner('Extinguished', 'death');
+    }
+    await wait(c.escaped ? 300 : c.won ? 1700 : 3200);
     this.game.finishCombat();
     this.ui.busy = false;
     this.ui.targeting = null;

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <filter id="b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter>
+  <filter id="b6" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="b20" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="20"/></filter>
+  <filter id="b40" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="40"/></filter>
+  <filter id="stone" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.06 0.14" numOctaves="3" seed="11" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 -0.18" result="na"/>
+    <feComposite in="na" in2="SourceGraphic" operator="in" result="t"/>
+    <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="t"/></feMerge>
+  </filter>
+  <radialGradient id="vignette" cx="0.5" cy="0.45" r="0.75"><stop offset="0.45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.92"/></radialGradient>
+  <radialGradient id="warm"><stop offset="0" stop-color="#ffb347" stop-opacity="0.9"/><stop offset="0.4" stop-color="#ff7a2a" stop-opacity="0.35"/><stop offset="1" stop-color="#ff7a2a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="fireCore" cx="0.5" cy="0.75" r="0.6"><stop offset="0" stop-color="#fff4c2"/><stop offset="0.3" stop-color="#ffb347"/><stop offset="0.7" stop-color="#c8401a"/><stop offset="1" stop-color="#5a0f05" stop-opacity="0"/></radialGradient>
+  <filter id="paper" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.004 0.006" numOctaves="5" seed="4"/>
+    <feColorMatrix type="matrix" values="0 0 0 0.10 0.03  0 0 0 0.08 0.025  0 0 0 0.06 0.02  0 0 0 0 1"/>
+  </filter>
+  <filter id="stains" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="8"/>
+    <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.2"/>
+  </filter></defs>
+
+  <rect width="1600" height="900" fill="#120d0a"/>
+  <rect width="1600" height="900" filter="url(#paper)" opacity="0.9"/>
+  <rect width="1600" height="900" filter="url(#stains)" opacity="0.18"/>
+<rect width="1600" height="900" fill="url(#vignette)"/>
+</svg>

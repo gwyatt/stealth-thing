@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 180" width="230" height="180">
+<defs>
+  <linearGradient id="body" x1="0" y1="0" x2="1" y2="0.35">
+    <stop offset="0" stop-color="#5c6448"/><stop offset="0.38" stop-color="#272b1c"/><stop offset="1" stop-color="#0d0f08"/>
+  </linearGradient>
+  <linearGradient id="bodyDark" x1="0" y1="0" x2="1" y2="0.4">
+    <stop offset="0" stop-color="#272b1c"/><stop offset="0.6" stop-color="#0d0f08"/><stop offset="1" stop-color="#050404"/>
+  </linearGradient>
+  <linearGradient id="bodyV" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#5c6448"/><stop offset="0.5" stop-color="#272b1c"/><stop offset="1" stop-color="#0d0f08"/>
+  </linearGradient>
+  <linearGradient id="cloth" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#272b1c"/><stop offset="0.7" stop-color="#0d0f08"/><stop offset="1" stop-color="#000" stop-opacity="0.9"/>
+  </linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#b5ab9b"/><stop offset="0.25" stop-color="#5d564d"/><stop offset="0.7" stop-color="#1e1b18"/><stop offset="1" stop-color="#0a0908"/>
+  </linearGradient>
+  <linearGradient id="bone" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#e2d6bb"/><stop offset="0.5" stop-color="#8d8270"/><stop offset="1" stop-color="#2b261f"/>
+  </linearGradient>
+  <radialGradient id="glow"><stop offset="0" stop-color="#b9d77a" stop-opacity="0.9"/><stop offset="1" stop-color="#b9d77a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="eyeGlow"><stop offset="0" stop-color="#d8ff6a"/><stop offset="0.35" stop-color="#d8ff6a" stop-opacity="0.6"/><stop offset="1" stop-color="#d8ff6a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="fire" cx="0.5" cy="0.7" r="0.6"><stop offset="0" stop-color="#fff4c2"/><stop offset="0.3" stop-color="#ffb347"/><stop offset="0.7" stop-color="#d4421a"/><stop offset="1" stop-color="#5a0f05" stop-opacity="0"/></radialGradient>
+  <radialGradient id="shadow"><stop offset="0" stop-color="#000" stop-opacity="0.75"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <filter id="grain" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 -0.25" result="na"/>
+    <feComposite in="na" in2="SourceGraphic" operator="in" result="g"/>
+    <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="g"/></feMerge>
+  </filter>
+  <filter id="b1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.2"/></filter>
+  <filter id="b3" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="b8" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<ellipse cx="115" cy="170" rx="82.8" ry="10" fill="url(#shadow)"/>
+<g filter="url(#grain)">
+
+  <path d="M50 140 L30 170 M70 146 L60 172 M150 146 L160 172 M170 140 L196 168 M60 120 L22 130 M164 120 L206 128" stroke="#1a1d10" stroke-width="5" stroke-linecap="round"/>
+  <path d="M40 126 C36 70 80 40 126 44 C172 48 200 80 192 126 C170 150 64 150 40 126 Z" fill="url(#body)"/>
+  <path d="M116 46 L118 140" stroke="#0d0f08" stroke-width="3"/>
+  <path d="M60 80 C80 56 110 50 116 52 M128 52 C150 54 176 70 184 96" stroke="#d8ffb0" stroke-width="3" fill="none" opacity="0.3" stroke-linecap="round"/>
+  <g fill="#0d0f08"><path d="M66 70 L60 56 L74 66 Z"/><path d="M96 54 L94 40 L104 52 Z"/><path d="M146 54 L152 40 L154 56 Z"/><path d="M176 76 L188 64 L184 80 Z"/></g>
+  <path d="M46 124 C26 118 14 104 16 92 C30 96 40 106 50 112 Z" fill="url(#body)"/>
+  <path d="M30 100 C18 80 10 60 18 40 C24 60 34 76 40 92 Z" fill="url(#metal)"/>
+  <circle cx="160" cy="100" r="5" fill="#b9d77a" opacity="0.5"/><circle cx="90" cy="96" r="4" fill="#b9d77a" opacity="0.4"/>
+  <circle cx="34" cy="108" r="7.68" fill="url(#eyeGlow)" opacity="0.55" filter="url(#b3)"/><circle cx="34" cy="108" r="2.4" fill="url(#eyeGlow)"/><circle cx="34" cy="108" r="1.08" fill="#fff"/>
+</g>
+</svg>

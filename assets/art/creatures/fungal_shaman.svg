@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260" width="200" height="260">
+<defs>
+  <linearGradient id="body" x1="0" y1="0" x2="1" y2="0.35">
+    <stop offset="0" stop-color="#6a5d6e"/><stop offset="0.38" stop-color="#2c2430"/><stop offset="1" stop-color="#110d12"/>
+  </linearGradient>
+  <linearGradient id="bodyDark" x1="0" y1="0" x2="1" y2="0.4">
+    <stop offset="0" stop-color="#2c2430"/><stop offset="0.6" stop-color="#110d12"/><stop offset="1" stop-color="#050404"/>
+  </linearGradient>
+  <linearGradient id="bodyV" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#6a5d6e"/><stop offset="0.5" stop-color="#2c2430"/><stop offset="1" stop-color="#110d12"/>
+  </linearGradient>
+  <linearGradient id="cloth" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#2c2430"/><stop offset="0.7" stop-color="#110d12"/><stop offset="1" stop-color="#000" stop-opacity="0.9"/>
+  </linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#b5ab9b"/><stop offset="0.25" stop-color="#5d564d"/><stop offset="0.7" stop-color="#1e1b18"/><stop offset="1" stop-color="#0a0908"/>
+  </linearGradient>
+  <linearGradient id="bone" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#e2d6bb"/><stop offset="0.5" stop-color="#8d8270"/><stop offset="1" stop-color="#2b261f"/>
+  </linearGradient>
+  <radialGradient id="glow"><stop offset="0" stop-color="#e7a8ff" stop-opacity="0.9"/><stop offset="1" stop-color="#e7a8ff" stop-opacity="0"/></radialGradient>
+  <radialGradient id="eyeGlow"><stop offset="0" stop-color="#ffe9a8"/><stop offset="0.35" stop-color="#ffe9a8" stop-opacity="0.6"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/></radialGradient>
+  <radialGradient id="fire" cx="0.5" cy="0.7" r="0.6"><stop offset="0" stop-color="#fff4c2"/><stop offset="0.3" stop-color="#ffb347"/><stop offset="0.7" stop-color="#d4421a"/><stop offset="1" stop-color="#5a0f05" stop-opacity="0"/></radialGradient>
+  <radialGradient id="shadow"><stop offset="0" stop-color="#000" stop-opacity="0.75"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <filter id="grain" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 -0.25" result="na"/>
+    <feComposite in="na" in2="SourceGraphic" operator="in" result="g"/>
+    <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="g"/></feMerge>
+  </filter>
+  <filter id="b1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.2"/></filter>
+  <filter id="b3" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="b8" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<ellipse cx="100" cy="250" rx="72" ry="10" fill="url(#shadow)"/>
+<g filter="url(#grain)">
+
+  <path d="M40 60 L50 250" stroke="#3a2a1a" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="40" cy="52" r="20" fill="#e7a8ff" opacity="0.45" filter="url(#b8)"/>
+  <circle cx="40" cy="52" r="9" fill="#e7a8ff" opacity="0.9"/><circle cx="40" cy="52" r="4" fill="#fff"/>
+  <path d="M30 60 C34 66 46 66 50 60" stroke="#3a2a1a" stroke-width="3" fill="none"/>
+  <path d="M100 96 C76 104 64 150 66 200 L56 250 L58.0 250 L62.7 257.7 L67.4 250 L71.4 250 L76.1 262.6 L80.8 250 L84.9 250 L89.6 260.5 L94.3 250 L98.3 250 L103.0 258.4 L107.7 250 L111.7 250 L116.4 263.3 L121.1 250 L125.2 250 L129.9 261.2 L134.6 250 L138.6 250 L143.3 259.1 L148.0 250 L150 250 L140 196 C142 150 128 104 108 96 Z" fill="url(#cloth)"/>
+  <path d="M96 116 C80 120 64 120 52 118 L52 130 C66 132 82 132 100 128 Z" fill="url(#body)"/>
+  <path d="M90 108 C88 90 94 80 104 80 C114 80 118 90 116 108 Z" fill="url(#body)"/>
+  <path d="M50 84 C50 30 160 30 160 84 C136 92 74 92 50 84 Z" fill="url(#body)"/>
+  <path d="M60 86 C80 94 130 94 150 86" stroke="#1a1219" stroke-width="4" fill="none"/>
+  <g fill="#e7a8ff"><circle cx="80" cy="54" r="6" opacity="0.8"/><circle cx="108" cy="44" r="4" opacity="0.7"/><circle cx="132" cy="60" r="5" opacity="0.5"/><circle cx="96" cy="68" r="3" opacity="0.8"/></g>
+  <path d="M90 120 L92 170 M110 120 L114 176" stroke="#2a1f2c" stroke-width="2" opacity="0.8"/>
+  <circle cx="98" cy="98" r="5.760000000000001" fill="url(#eyeGlow)" opacity="0.55" filter="url(#b3)"/><circle cx="98" cy="98" r="1.8" fill="url(#eyeGlow)"/><circle cx="98" cy="98" r="0.81" fill="#fff"/><circle cx="110" cy="98" r="5.760000000000001" fill="url(#eyeGlow)" opacity="0.55" filter="url(#b3)"/><circle cx="110" cy="98" r="1.8" fill="url(#eyeGlow)"/><circle cx="110" cy="98" r="0.81" fill="#fff"/>
+</g>
+</svg>
