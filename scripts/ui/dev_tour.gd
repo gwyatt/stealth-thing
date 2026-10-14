@@ -234,7 +234,7 @@ func _play_combat() -> void:
 	if c == null or c.over or scr.busy:
 		return
 	var guard := 0
-	while not c.over and c.phase == "player" and guard < 12:
+	while is_instance_valid(scr) and not c.over and c.phase == "player" and guard < 12:
 		guard += 1
 		var playable := c.hand.filter(func(h): return c.can_play(h).ok)
 		if playable.is_empty():
@@ -253,9 +253,11 @@ func _play_combat() -> void:
 			alive.sort_custom(func(a, b): return a.hp < b.hp)
 			scr._click_creature(alive[0].uid)
 		await _wait(0.15)
-		while scr.busy:
+		while is_instance_valid(scr) and scr.busy:
 			await _wait(0.05)
-	if not c.over and c.phase == "player":
+		if not is_instance_valid(scr):
+			return
+	if is_instance_valid(scr) and not c.over and c.phase == "player":
 		if c.player.hp < c.player.max_hp * 0.4:
 			for i in Session.run.data.potions.size():
 				var p = Session.run.data.potions[i]
@@ -266,5 +268,5 @@ func _play_combat() -> void:
 					await _wait(0.2)
 					break
 		await scr.end_turn()
-	while not is_instance_valid(main.screen) or main._routing or (main.screen == scr and scr.busy):
+	while not is_instance_valid(main.screen) or main._routing or (is_instance_valid(scr) and main.screen == scr and scr.busy):
 		await _wait(0.1)
