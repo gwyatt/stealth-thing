@@ -57,10 +57,10 @@ func music(name: String, fade := 1.5) -> void:
 	var s := _stream(MUSIC_DIR, name)
 	var old := _music_a if _music_a.playing else _music_b
 	var nxt := _music_b if old == _music_a else _music_a
-	var tw := create_tween().set_parallel(true)
 	if old.playing:
+		var tw := create_tween()
 		tw.tween_property(old, "volume_db", -40.0, fade)
-		tw.chain().tween_callback(old.stop)
+		tw.tween_callback(old.stop)
 	if s != null:
 		nxt.stream = s
 		nxt.volume_db = -40.0

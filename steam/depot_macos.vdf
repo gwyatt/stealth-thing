@@ -1,0 +1,11 @@
+"DepotBuild"
+{
+	"DepotID" "0000003"	// ← your macos depot ID
+	"FileMapping"
+	{
+		"LocalPath" "macos/*"
+		"DepotPath" "."
+		"Recursive" "1"
+	}
+	"FileExclusion" "*.pdb"
+}

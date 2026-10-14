@@ -1,0 +1,14 @@
+"AppBuild"
+{
+	"AppID" "0000000"	// ← your Emberdeep App ID
+	"Desc" "Emberdeep build"
+	"ContentRoot" "../build/"
+	"BuildOutput" "../build/steam_output/"
+	"SetLive" ""		// e.g. "beta" to push to a branch automatically
+	"Depots"
+	{
+		"0000001" "depot_windows.vdf"
+		"0000002" "depot_linux.vdf"
+		"0000003" "depot_macos.vdf"
+	}
+}

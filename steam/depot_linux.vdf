@@ -1,0 +1,11 @@
+"DepotBuild"
+{
+	"DepotID" "0000002"	// ← your linux depot ID
+	"FileMapping"
+	{
+		"LocalPath" "linux/*"
+		"DepotPath" "."
+		"Recursive" "1"
+	}
+	"FileExclusion" "*.pdb"
+}

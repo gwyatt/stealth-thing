@@ -1,83 +1,99 @@
 # Emberdeep
 
-A roguelike deckbuilding card game in the spirit of *Slay the Spire*. You are the **Lanternkeeper**, carrying the last flame down through three acts of the Deep to face the Ember Tyrant.
+A dark-fantasy roguelike deckbuilder in the spirit of *Slay the Spire*, built as a native
+desktop game with **Godot 4.7** for release on **Steam** (Windows, Linux, macOS, Steam Deck).
 
-Runs entirely in the browser: vanilla JavaScript ES modules, no build step and no dependencies.
+You are the **Lanternkeeper**, carrying the last flame down through three acts of the
+Deep to face the Ember Tyrant.
 
-## Play
+## Play it locally
+
+1. Install **Godot 4.7.2** (standard build, not .NET): <https://godotengine.org/download>
+2. Either open the editor, *Import* this folder (`project.godot`) and press **F5**, or run:
 
 ```bash
-npm start          # serves the game at http://localhost:8080
+godot --path /path/to/emberdeep
 ```
 
-Any static file server works (`python3 -m http.server`, GitHub Pages, …). The page must be served over HTTP, because browsers block ES modules loaded from `file://`.
+Saves go to Godot's user folder (`Emberdeep/` under your OS app-data directory).
 
-**To host on GitHub Pages:** Settings → Pages → *Deploy from a branch* → pick the branch and `/ (root)`.
+| Input | Mouse & keyboard | Gamepad |
+| --- | --- | --- |
+| Play a card | Click it (then click a target) or `1`–`9` | D-pad, **A** |
+| Change target | Hover an enemy, or `←` / `→` | D-pad |
+| End turn | **End Turn** button or `E` | **Y** |
+| Cancel / menu | Right-click or `Esc` | **B** / **Start** |
+| Deck / potions | `D` / `P` | **Back** / **X** |
+| Fullscreen | `F11` | |
 
-## The game
+## What's in the game
 
-- **3 acts**, each a branching map of 13 floors plus a boss: monsters, elites, campfires, merchants, treasure and `?` events.
-- **47 cards** (starter, common, uncommon, rare) plus status cards and curses. Every card can be upgraded.
-- **31 relics**: common, uncommon, rare, shop and boss tiers.
-- **12 potions**, **16 regular enemies** with telegraphed intents, **8 elites** and **3 bosses** (the last has a second phase).
-- **11 events**, plus a starting blessing.
-- Seeded runs (enter a custom seed on the title screen), autosave between rooms, and a lifetime record.
+- **3 acts**: branching 13-floor maps of monsters, elites, campfires, merchants, treasure and events, each ending in a boss.
+- **47 cards**, all upgradable, plus status cards and curses; **31 relics**; **12 potions**.
+- **16 enemies, 8 elites, 3 bosses** with telegraphed intents (the last boss has a second phase).
+- **11 events** and a starting blessing. Seeded runs, autosave, lifetime stats.
+- **Light**, the signature resource: it persists between turns and wanes by 1 each turn. Cards build it, scale with it, or spend it all at once. **Burn** is the damage-over-time archetype.
 
-### Art direction
+### Presentation
 
-Dark, grim and quiet, in the tradition of Souls games: silhouettes lit from one side by the Lanternkeeper's lantern, glowing eyes, fog, ash and embers, iron-and-bronze UI and a film-grain/vignette pass over everything. All art is hand-authored vector code (no image files to license):
-
-- **29 characters** — the Lanternkeeper, the merchant and every enemy and boss (`assets/art/creatures/`).
-- **6 scenes** — the flooded crypt, the fungal warrens, the burning cathedral, the title vista, the campfire and the map vellum (`assets/art/scenes/`).
-- **~50 engraved emblems** for card art, relics, potions, statuses, intents, map nodes and HUD icons (`src/ui/art/emblems.js`).
-
-The SVGs are generated from `tools/art/*.js`. After editing them, run `npm run art`. To review every character at once, start the server and open `/tools/art/sheet.html?ids=player,ghoul,...`; `/tools/art/emblems.html` shows all emblems.
-
-### Signature mechanic: Light 🏮
-
-Light is a second resource that **persists between turns** (max 10) and **wanes by 1** at the end of each turn. Cards build it (*Kindle*, *Stoke*, *Brace*), scale off it (*Inferno Fist*, *Lantern Ward*, *Twin Suns*) or spend it all at once (*Flare*, *Supernova*). Relics and powers bend the rules: *Everburning Wick* stops it waning, *Mirror Shard* raises the cap, *Ashen Armor* turns Light into Block.
-
-The other main archetype is **Burn**: damage over time that ignores Block, amplified by *Pyroclasm*, *Wildfire* and *Conflagration*.
-
-### Controls
-
-| Input | Action |
-| --- | --- |
-| Click a card | Play it (cards that need a target: then click an enemy) |
-| `1`–`9` | Select a card; while targeting, choose an enemy |
-| `E` | End turn |
-| `Esc` / right-click | Cancel targeting or close a window |
-| `D` / `M` | View deck / map |
+- Characters are lit in real time: each sprite ships with a **normal map**, so the Lanternkeeper's flickering lantern (a live 2D light whose strength follows your Light) rakes across armour and faces. Eyes, flames and glass glow in a separate additive layer.
+- Painted **parallax backgrounds**, drifting shader fog, dust/spores/embers, film grain and vignette.
+- Death is a **burning dissolve** shader; cinematic banners for bosses, victories and defeat.
+- Generated **ambient score** (one loop per act, boss, campfire, title) and ~30 sound effects.
+- Full **gamepad** navigation for Steam Deck.
 
 ## Project layout
 
 ```
-index.html, css/style.css   page shell and styles
-src/core/rng.js             seeded PRNG (mulberry32)
-src/data/                   content: cards, relics, potions, enemies + encounters, events, statuses
-src/engine/combat.js        turn-based combat rules (pure, deterministic)
-src/engine/map.js           act map generation
-src/engine/game.js          run state, rewards, shop, rest, events, save/load
-src/ui/                     DOM rendering, input, animation, procedural sound
-src/ui/art/                 emblem library and generated creature size manifest
-assets/art/                 generated creature and scene SVGs
-tools/art/                  art source (character and scene generators)
-tools/bot.js                greedy bot that plays full runs headlessly
-tools/simulate.js           balance simulator
-tests/                      node:test suite
+project.godot              engine config (1920×1080, GL Compatibility renderer)
+scenes/main.tscn           single root scene
+scripts/core, data, engine pure game rules: RNG, content, combat, map, run state (no nodes)
+scripts/autoload/          Settings (+input map), Audio, SteamService (optional), Session (saves)
+scripts/ui/                screens, widgets, backdrop, theme; dev_tour.gd (screenshot tour)
+shaders/                   post-processing, fog, dissolve
+assets/                    art (creatures, scenes, icons, ui), audio, fonts (OFL)
+art_src/                   editable vector sources for characters and emblems
+tools/art/                 Python art pipeline (sprites + normal maps, scenes, UI, store capsules)
+tools/audio/               Python sound and music synthesis
+tools/build/               export and screenshot-tour scripts
+tests/                     headless test suite and a bot that plays full runs
+steam/                     SteamPipe build configs, achievements, store art drafts
+STEAM.md                   step-by-step Steam release guide
 ```
-
-The engine has no DOM dependencies. Combat emits an event list that the UI drains to animate damage numbers and play sounds, so the same code runs under the bot, the tests and the browser.
-
-### Adding content
-
-- **Card:** add a `card(...)` entry in `src/data/cards.js` with numbers in `v`, upgrade overrides in `up`, templated `text`, and a `play(c, v, target)` function that calls the combat API (`attack`, `block`, `apply`, `gainLight`, `draw`, …).
-- **Enemy:** add an `enemy(...)` in `src/data/enemies.js` with declarative `moves` and an `ai` function, then reference it in `ENCOUNTERS`.
-- **Relic / potion / event:** see the hooks documented at the top of each data file.
 
 ## Development
 
 ```bash
-npm test           # engine unit tests + 60 full bot runs
-npm run simulate   # play 300 bot runs and print win rate and top killers
+tools/test.sh /path/to/godot          # headless tests (engine rules + 40 full bot runs)
+tools/build/tour.sh /path/to/godot    # play through every screen and save screenshots
+tools/build/export.sh /path/to/godot  # release builds into build/
 ```
+
+CI (`.github/workflows/ci.yml`) runs the tests on every push and exports Windows/Linux builds for `v*` tags.
+
+### Regenerating assets
+
+The shipped PNG/WAV/OGG files are committed, so none of this is needed to play. To change art or audio:
+
+```bash
+pip install numpy scipy pillow          # plus ffmpeg for music
+python3 tools/art/render_creatures.py   # art_src/creatures/*.svg → sprites, normal maps, glow layers
+python3 tools/art/render_icons.py       # art_src/emblems/*.svg → embossed icons
+python3 tools/art/render_scenes.py      # painted parallax backgrounds
+python3 tools/art/render_ui.py          # card frames, panels, app icon
+python3 tools/art/render_capsules.py    # draft Steam capsules
+python3 tools/audio/synth.py            # sound effects and music
+```
+
+The art pipeline is deliberately replaceable: drop in commissioned art using the same file names
+(`<id>.png`, optional `<id>_n.png` normal map and `<id>_glow.png`) and the game picks it up.
+
+### Adding content
+
+- **Card**: an entry in `CardDB.CARDS` (`scripts/data/card_db.gd`) plus its effect in `CardDB.play()`.
+- **Enemy**: an entry in `EnemyDB.ENEMIES` with declarative moves, a branch in `EnemyDB.ai()`, an encounter, and art in `art_src/creatures/<id>.svg`.
+- **Relic / potion / event**: see the hook functions in their `*_db.gd` files.
+
+## Licenses
+
+Fonts: Cinzel and EB Garamond, SIL Open Font License (see `assets/fonts/`). Everything else was created for this project.

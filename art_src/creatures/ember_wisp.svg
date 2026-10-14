@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 220" width="180" height="220">
+<defs>
+  <linearGradient id="body" x1="0" y1="0" x2="1" y2="0.35">
+    <stop offset="0" stop-color="#a8573a"/><stop offset="0.38" stop-color="#4a1f14"/><stop offset="1" stop-color="#120605"/>
+  </linearGradient>
+  <linearGradient id="bodyDark" x1="0" y1="0" x2="1" y2="0.4">
+    <stop offset="0" stop-color="#4a1f14"/><stop offset="0.6" stop-color="#120605"/><stop offset="1" stop-color="#050404"/>
+  </linearGradient>
+  <linearGradient id="bodyV" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#a8573a"/><stop offset="0.5" stop-color="#4a1f14"/><stop offset="1" stop-color="#120605"/>
+  </linearGradient>
+  <linearGradient id="cloth" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#4a1f14"/><stop offset="0.7" stop-color="#120605"/><stop offset="1" stop-color="#000" stop-opacity="0.9"/>
+  </linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#b5ab9b"/><stop offset="0.25" stop-color="#5d564d"/><stop offset="0.7" stop-color="#1e1b18"/><stop offset="1" stop-color="#0a0908"/>
+  </linearGradient>
+  <linearGradient id="bone" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#e2d6bb"/><stop offset="0.5" stop-color="#8d8270"/><stop offset="1" stop-color="#2b261f"/>
+  </linearGradient>
+  <radialGradient id="glow"><stop offset="0" stop-color="#ffb347" stop-opacity="0.9"/><stop offset="1" stop-color="#ffb347" stop-opacity="0"/></radialGradient>
+  <radialGradient id="eyeGlow"><stop offset="0" stop-color="#fff1a8"/><stop offset="0.35" stop-color="#fff1a8" stop-opacity="0.6"/><stop offset="1" stop-color="#fff1a8" stop-opacity="0"/></radialGradient>
+  <radialGradient id="fire" cx="0.5" cy="0.7" r="0.6"><stop offset="0" stop-color="#fff4c2"/><stop offset="0.3" stop-color="#ffb347"/><stop offset="0.7" stop-color="#d4421a"/><stop offset="1" stop-color="#5a0f05" stop-opacity="0"/></radialGradient>
+  <radialGradient id="shadow"><stop offset="0" stop-color="#000" stop-opacity="0.75"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <filter id="grain" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 -0.25" result="na"/>
+    <feComposite in="na" in2="SourceGraphic" operator="in" result="g"/>
+    <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="g"/></feMerge>
+  </filter>
+  <filter id="b1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.2"/></filter>
+  <filter id="b3" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="b8" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<ellipse cx="90" cy="210" rx="64.8" ry="10" fill="url(#shadow)"/>
+<g filter="url(#grain)">
+
+  <path d="M90 200 C60 190 50 160 60 130 C66 110 60 90 70 70 C76 90 84 92 86 80 C90 60 84 40 96 20 C110 46 124 66 122 100 C120 120 132 130 126 156 C120 182 110 196 90 200 Z" fill="url(#fire)" opacity="0.95"/>
+  <path d="M92 196 C76 186 72 166 78 150 C82 160 88 160 90 152 C92 140 96 132 102 124 C108 140 112 156 106 176 C102 188 98 194 92 196 Z" fill="#fff4c2" opacity="0.6"/>
+  <circle cx="92" cy="112" r="60" fill="#ff7a2a" opacity="0.25" filter="url(#b8)"/>
+  <path d="M74 96 C74 76 110 76 110 96 C110 108 104 112 102 120 L82 120 C80 112 74 108 74 96 Z" fill="#1a0e08" opacity="0.92"/>
+  <path d="M84 120 L84 126 M90 120 L90 127 M96 120 L96 126" stroke="#1a0e08" stroke-width="3"/>
+  <circle cx="84" cy="98" r="8.32" fill="url(#eyeGlow)" opacity="0.55" filter="url(#b3)"/><circle cx="84" cy="98" r="2.6" fill="url(#eyeGlow)"/><circle cx="84" cy="98" r="1.1700000000000002" fill="#fff"/><circle cx="100" cy="98" r="8.32" fill="url(#eyeGlow)" opacity="0.55" filter="url(#b3)"/><circle cx="100" cy="98" r="2.6" fill="url(#eyeGlow)"/><circle cx="100" cy="98" r="1.1700000000000002" fill="#fff"/>
+</g>
+</svg>

@@ -40,8 +40,8 @@ func _init(run_state, enemy_ids: Array, seed_value: int, boss := false, elite :=
 	player = {
 		"is_player": true, "uid": "player", "name": "The Lanternkeeper",
 		"hp": int(run.data.hp), "max_hp": int(run.data.max_hp), "block": 0,
-		"energy": 0, "max_energy": BASE_ENERGY + relic_sum("energy"),
-		"light": 0, "max_light": BASE_MAX_LIGHT + relic_sum("max_light"),
+		"energy": 0, "max_energy": BASE_ENERGY + int(relic_sum("energy")),
+		"light": 0, "max_light": BASE_MAX_LIGHT + int(relic_sum("max_light")),
 		"statuses": {}, "dead": false,
 	}
 	for c in run.data.deck:
